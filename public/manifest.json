@@ -1,0 +1,10 @@
+{
+  "name": "DevToolkit",
+  "short_name": "DevToolkit",
+  "description": "Premium developer multi-tool — JWT decoder, Base64, regex tester, hash generator, and more. 100% client-side.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#2563eb",
+  "icons": [{ "src": "/favicon.ico", "sizes": "48x48", "type": "image/x-icon" }]
+}
