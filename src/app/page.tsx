@@ -37,6 +37,30 @@ const tools = [
   { id: 'lorem', name: 'Lorem Ipsum', icon: Wand2 },
 ];
 
+// Tool categories
+const toolCategories = [
+  {
+    name: 'Encoding & Decoding',
+    color: '#6366f1',
+    tools: ['jwt', 'base64', 'url']
+  },
+  {
+    name: 'Text & Code',
+    color: '#ec4899',
+    tools: ['regex', 'diff', 'markdown']
+  },
+  {
+    name: 'Generators',
+    color: '#f59e0b',
+    tools: ['hash', 'uuid', 'lorem']
+  },
+  {
+    name: 'Converters',
+    color: '#10b981',
+    tools: ['cron', 'timestamp', 'color']
+  }
+];
+
 // JWT Decoder Tool
 function JWTDecoder() {
   const [input, setInput] = useState('');
@@ -92,12 +116,24 @@ function JWTDecoder() {
           decode(e.target.value);
         }}
         placeholder="Paste your JWT token here..."
-        className="w-full h-32 p-3 font-mono text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        style={{
+          width: '100%',
+          height: '128px',
+          padding: '12px 14px',
+          fontFamily: 'ui-monospace, monospace',
+          fontSize: '13px',
+          border: '1px solid #cbd5e1',
+          borderRadius: '10px',
+          background: '#f8fafc',
+          color: '#0f172a',
+          outline: 'none',
+          resize: 'vertical'
+        }}
       />
 
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex gap-2 text-red-800 text-sm">
-          <AlertCircle size={18} className="flex-shrink-0 mt-0.5" />
+        <div style={{ padding: '12px 14px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '10px', fontSize: '13px', color: '#991b1b', display: 'flex', gap: '8px' }}>
+          <AlertCircle size={18} style={{ flexShrink: 0, marginTop: '2px' }} />
           <span>{error}</span>
         </div>
       )}
@@ -105,40 +141,40 @@ function JWTDecoder() {
       {decoded && (
         <div className="space-y-3">
           {decoded.isExpired && (
-            <div className="px-3 py-2 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm font-medium">
+            <div style={{ padding: '12px 14px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '10px', color: '#991b1b', fontSize: '13px', fontWeight: 600 }}>
               🔴 EXPIRED
             </div>
           )}
 
-          <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <div className="text-sm font-semibold text-blue-900 mb-2">Header</div>
-            <pre className="text-xs font-mono text-blue-800 overflow-x-auto">
+          <div style={{ padding: '16px', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '10px' }}>
+            <div style={{ fontSize: '11px', color: '#1e40af', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>Header</div>
+            <pre style={{ fontSize: '12px', fontFamily: 'ui-monospace, monospace', color: '#1e40af', wordBreak: 'break-all', whiteSpace: 'pre-wrap' }}>
               {JSON.stringify(decoded.header, null, 2)}
             </pre>
           </div>
 
-          <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
-            <div className="text-sm font-semibold text-purple-900 mb-2">
+          <div style={{ padding: '16px', background: '#faf5ff', border: '1px solid #e9d5ff', borderRadius: '10px' }}>
+            <div style={{ fontSize: '11px', color: '#6b21a8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>
               Payload
             </div>
-            <pre className="text-xs font-mono text-purple-800 overflow-x-auto">
+            <pre style={{ fontSize: '12px', fontFamily: 'ui-monospace, monospace', color: '#6b21a8', wordBreak: 'break-all', whiteSpace: 'pre-wrap' }}>
               {JSON.stringify(decoded.payload, null, 2)}
             </pre>
           </div>
 
           <div className="grid grid-cols-2 gap-3 text-sm">
             {decoded.iat && (
-              <div className="p-3 bg-slate-100 rounded-lg">
-                <div className="text-xs text-slate-600 mb-1">Issued At</div>
-                <div className="font-mono text-xs text-slate-900">
+              <div style={{ padding: '12px 14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+                <div style={{ fontSize: '11px', color: '#64748b', fontWeight: 600, marginBottom: '6px' }}>Issued At</div>
+                <div style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px', color: '#0f172a' }}>
                   {decoded.iat}
                 </div>
               </div>
             )}
             {decoded.exp && (
-              <div className="p-3 bg-slate-100 rounded-lg">
-                <div className="text-xs text-slate-600 mb-1">Expires At</div>
-                <div className="font-mono text-xs text-slate-900">
+              <div style={{ padding: '12px 14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+                <div style={{ fontSize: '11px', color: '#64748b', fontWeight: 600, marginBottom: '6px' }}>Expires At</div>
+                <div style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px', color: '#0f172a' }}>
                   {decoded.exp}
                 </div>
               </div>
@@ -192,28 +228,40 @@ function Base64Tool() {
       <div className="flex gap-2">
         <button
           onClick={() => setMode('encode')}
-          className={`flex-1 py-2 px-3 rounded-lg font-medium transition ${
-            mode === 'encode'
-              ? 'bg-blue-600 text-white'
-              : 'bg-slate-200 text-slate-700 hover:bg-slate-300'
-          }`}
+          style={{
+            flex: 1,
+            padding: '10px 16px',
+            borderRadius: '10px',
+            fontWeight: 600,
+            fontSize: '13px',
+            background: mode === 'encode' ? 'linear-gradient(135deg, #4f46e5, #7c3aed)' : '#f1f5f9',
+            color: mode === 'encode' ? '#fff' : '#475569',
+            border: mode === 'encode' ? 'none' : '1px solid #cbd5e1',
+            cursor: 'pointer'
+          }}
         >
           Encode
         </button>
         <button
           onClick={() => setMode('decode')}
-          className={`flex-1 py-2 px-3 rounded-lg font-medium transition ${
-            mode === 'decode'
-              ? 'bg-blue-600 text-white'
-              : 'bg-slate-200 text-slate-700 hover:bg-slate-300'
-          }`}
+          style={{
+            flex: 1,
+            padding: '10px 16px',
+            borderRadius: '10px',
+            fontWeight: 600,
+            fontSize: '13px',
+            background: mode === 'decode' ? 'linear-gradient(135deg, #4f46e5, #7c3aed)' : '#f1f5f9',
+            color: mode === 'decode' ? '#fff' : '#475569',
+            border: mode === 'decode' ? 'none' : '1px solid #cbd5e1',
+            cursor: 'pointer'
+          }}
         >
           Decode
         </button>
       </div>
 
       {isBase64 && mode === 'encode' && (
-        <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
+        <div style={{ padding: '12px 14px', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '10px', fontSize: '13px', color: '#1e40af' }}>
           ✓ Input looks like Base64
         </div>
       )}
@@ -222,21 +270,44 @@ function Base64Tool() {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder="Enter text to encode or Base64 to decode..."
-        className="w-full h-32 p-3 font-mono text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        style={{
+          width: '100%',
+          height: '128px',
+          padding: '12px 14px',
+          fontFamily: 'ui-monospace, monospace',
+          fontSize: '13px',
+          border: '1px solid #cbd5e1',
+          borderRadius: '10px',
+          background: '#f8fafc',
+          color: '#0f172a',
+          outline: 'none',
+          resize: 'vertical'
+        }}
       />
 
       <button
         onClick={mode === 'encode' ? handleEncode : handleDecode}
-        className="w-full py-2 px-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition"
+        style={{
+          width: '100%',
+          padding: '12px 16px',
+          background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
+          color: '#ffffff',
+          borderRadius: '10px',
+          fontWeight: 700,
+          fontSize: '14px',
+          border: 'none',
+          cursor: 'pointer',
+          boxShadow: '0 4px 12px rgba(99,102,241,0.3)'
+        }}
       >
         {mode === 'encode' ? 'Encode' : 'Decode'}
       </button>
 
       {output && (
         <div className="space-y-2">
-          <div className="p-3 bg-slate-100 rounded-lg">
-            <div className="text-xs text-slate-600 mb-2">Output</div>
-            <pre className="text-sm font-mono text-slate-900 break-all whitespace-pre-wrap">
+          <div style={{ padding: '14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+            <div style={{ fontSize: '11px', color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>Output</div>
+            <pre style={{ fontSize: '12px', fontFamily: 'ui-monospace, monospace', color: '#0f172a', wordBreak: 'break-all', whiteSpace: 'pre-wrap' }}>
               {output}
             </pre>
           </div>
@@ -272,19 +343,53 @@ function URLTool() {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder="Enter text or URL component..."
-        className="w-full h-32 p-3 font-mono text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        style={{
+          width: '100%',
+          height: '128px',
+          padding: '12px 14px',
+          fontFamily: 'ui-monospace, monospace',
+          fontSize: '13px',
+          border: '1px solid #cbd5e1',
+          borderRadius: '10px',
+          background: '#f8fafc',
+          color: '#0f172a',
+          outline: 'none',
+          resize: 'vertical'
+        }}
       />
 
       <div className="flex gap-2">
         <button
           onClick={handleEncode}
-          className="flex-1 py-2 px-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition"
+          style={{
+            flex: 1,
+            padding: '12px 16px',
+            background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
+            color: '#ffffff',
+            borderRadius: '10px',
+            fontWeight: 700,
+            fontSize: '14px',
+            border: 'none',
+            cursor: 'pointer',
+            boxShadow: '0 4px 12px rgba(99,102,241,0.3)'
+          }}
         >
           Encode
         </button>
         <button
           onClick={handleDecode}
-          className="flex-1 py-2 px-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition"
+          style={{
+            flex: 1,
+            padding: '12px 16px',
+            background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
+            color: '#ffffff',
+            borderRadius: '10px',
+            fontWeight: 700,
+            fontSize: '14px',
+            border: 'none',
+            cursor: 'pointer',
+            boxShadow: '0 4px 12px rgba(99,102,241,0.3)'
+          }}
         >
           Decode
         </button>
@@ -292,9 +397,9 @@ function URLTool() {
 
       {output && (
         <div className="space-y-2">
-          <div className="p-3 bg-slate-100 rounded-lg">
-            <div className="text-xs text-slate-600 mb-2">Output</div>
-            <pre className="text-sm font-mono text-slate-900 break-all whitespace-pre-wrap">
+          <div style={{ padding: '14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+            <div style={{ fontSize: '11px', color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>Output</div>
+            <pre style={{ fontSize: '12px', fontFamily: 'ui-monospace, monospace', color: '#0f172a', wordBreak: 'break-all', whiteSpace: 'pre-wrap' }}>
               {output}
             </pre>
           </div>
@@ -307,7 +412,7 @@ function URLTool() {
   );
 }
 
-// JSON Formatter
+// Cron Parser
 function CronParser() {
   const [input, setInput] = useState('');
   const [description, setDescription] = useState('');
@@ -415,43 +520,62 @@ function CronParser() {
         value={input}
         onChange={(e) => { setInput(e.target.value); parse(e.target.value); }}
         placeholder="Enter cron expression (e.g., */15 * * * *)"
-        className="w-full p-3 font-mono text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        style={{
+          width: '100%',
+          padding: '12px 14px',
+          fontFamily: 'ui-monospace, monospace',
+          fontSize: '13px',
+          border: '1px solid #cbd5e1',
+          borderRadius: '10px',
+          background: '#f8fafc',
+          color: '#0f172a',
+          outline: 'none'
+        }}
       />
 
       <div className="flex flex-wrap gap-2">
         {presets.map((p) => (
           <button key={p.value} onClick={() => { setInput(p.value); parse(p.value); }}
-            className="px-3 py-1.5 text-xs font-medium bg-slate-100 text-slate-700 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition border border-slate-200">
+            style={{
+              padding: '6px 12px',
+              fontSize: '11px',
+              fontWeight: 600,
+              background: '#f8fafc',
+              color: '#475569',
+              borderRadius: '8px',
+              border: '1px solid #cbd5e1',
+              cursor: 'pointer'
+            }}>
             {p.label}
           </button>
         ))}
       </div>
 
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">{error}</div>
+        <div style={{ padding: '12px 14px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '10px', color: '#991b1b', fontSize: '13px' }}>{error}</div>
       )}
 
       {description && (
-        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <div className="text-xs font-medium text-blue-600 uppercase tracking-wide mb-1">Human Readable</div>
-          <div className="text-lg font-semibold text-blue-900">{description}</div>
+        <div style={{ padding: '14px', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '10px' }}>
+          <div style={{ fontSize: '11px', color: '#1e40af', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>Human Readable</div>
+          <div style={{ fontSize: '16px', fontWeight: 600, color: '#1e40af' }}>{description}</div>
         </div>
       )}
 
       {input.trim().split(/\s+/).length === 5 && !error && (
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table style={{ width: '100%', fontSize: '13px' }}>
             <thead>
-              <tr className="border-b border-slate-200">
+              <tr style={{ borderBottom: '2px solid #e2e8f0' }}>
                 {FIELDS.map((f, i) => (
-                  <th key={f} className="py-2 px-3 text-left text-slate-600 font-medium text-xs">{f}<br/><span className="text-slate-400">({RANGES[i][0]}-{RANGES[i][1]})</span></th>
+                  <th key={f} style={{ padding: '8px 12px', textAlign: 'left', fontSize: '11px', color: '#64748b', fontWeight: 600 }}>{f}<br/><span style={{ color: '#cbd5e1' }}>({RANGES[i][0]}-{RANGES[i][1]})</span></th>
                 ))}
               </tr>
             </thead>
             <tbody>
               <tr>
                 {input.trim().split(/\s+/).slice(0, 5).map((p, i) => (
-                  <td key={i} className="py-2 px-3 font-mono text-blue-700 font-semibold">{p}</td>
+                  <td key={i} style={{ padding: '8px 12px', fontFamily: 'ui-monospace, monospace', color: '#4f46e5', fontWeight: 600 }}>{p}</td>
                 ))}
               </tr>
             </tbody>
@@ -461,12 +585,12 @@ function CronParser() {
 
       {nextRuns.length > 0 && (
         <div className="space-y-2">
-          <div className="text-sm font-medium text-slate-700">Next 5 Runs</div>
+          <div style={{ fontSize: '13px', fontWeight: 600, color: '#0f172a' }}>Next 5 Runs</div>
           <div className="space-y-1">
             {nextRuns.map((run, i) => (
-              <div key={i} className="flex items-center gap-2 p-2 bg-green-50 border border-green-200 rounded-lg text-sm">
-                <span className="w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-xs font-bold">{i + 1}</span>
-                <span className="font-mono text-green-900">{run}</span>
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '10px', fontSize: '13px' }}>
+                <span style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#059669', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 700, flexShrink: 0 }}>{i + 1}</span>
+                <span style={{ fontFamily: 'ui-monospace, monospace', color: '#166534' }}>{run}</span>
               </div>
             ))}
           </div>
@@ -498,53 +622,40 @@ function RegexTester() {
         return;
       }
 
-      let result = `Found ${matches.length} match${matches.length !== 1 ? 'es' : ''}:\n\n`;
-      matches.forEach((match, index) => {
-        result += `Match ${index + 1}: "${match[0]}"\n`;
-        if (match.length > 1) {
-          match.forEach((group, i) => {
-            if (i > 0) {
-              result += `  Group ${i}: "${group}"\n`;
-            }
-          });
-        }
-        result += '\n';
-      });
-
-      setOutput(result);
+      const results = matches.map((m, i) => `Match ${i + 1}: "${m[0]}"\n${m.length > 1 ? 'Groups: ' + m.slice(1).join(', ') : ''}`).join('\n---\n');
+      setOutput(results);
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Invalid regex pattern'
-      );
+      setError(err instanceof Error ? err.message : 'Invalid regex');
     }
   }, [pattern, testString, flags]);
 
   return (
     <div className="space-y-4">
       <input
-        type="text"
         value={pattern}
         onChange={(e) => setPattern(e.target.value)}
         placeholder="Enter regex pattern..."
-        className="w-full p-3 font-mono text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        style={{
+          width: '100%',
+          padding: '12px 14px',
+          fontFamily: 'ui-monospace, monospace',
+          fontSize: '13px',
+          border: '1px solid #cbd5e1',
+          borderRadius: '10px',
+          background: '#f8fafc',
+          color: '#0f172a',
+          outline: 'none'
+        }}
       />
 
-      <div className="flex gap-2">
-        {['g', 'i', 'm', 's'].map((flag) => (
-          <label key={flag} className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={flags.includes(flag)}
-              onChange={(e) => {
-                if (e.target.checked) {
-                  setFlags((f) => f + flag);
-                } else {
-                  setFlags((f) => f.replace(flag, ''));
-                }
-              }}
-              className="w-4 h-4"
-            />
-            <span className="text-sm font-mono">{flag}</span>
+      <div className="flex flex-wrap gap-2">
+        {['g', 'i', 'm', 's'].map((f) => (
+          <label key={f} style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+            <input type="checkbox" checked={flags.includes(f)} onChange={(e) => {
+              if (e.target.checked) setFlags(flags + f);
+              else setFlags(flags.replace(f, ''));
+            }} />
+            <span style={{ fontSize: '13px', fontFamily: 'ui-monospace, monospace', color: '#475569' }}>{f}</span>
           </label>
         ))}
       </div>
@@ -552,27 +663,52 @@ function RegexTester() {
       <textarea
         value={testString}
         onChange={(e) => setTestString(e.target.value)}
-        placeholder="Enter test string..."
-        className="w-full h-24 p-3 font-mono text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        placeholder="Enter text to test..."
+        style={{
+          width: '100%',
+          height: '128px',
+          padding: '12px 14px',
+          fontFamily: 'ui-monospace, monospace',
+          fontSize: '13px',
+          border: '1px solid #cbd5e1',
+          borderRadius: '10px',
+          background: '#f8fafc',
+          color: '#0f172a',
+          outline: 'none',
+          resize: 'vertical'
+        }}
       />
-
-      {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">
-          {error}
-        </div>
-      )}
 
       <button
         onClick={testRegex}
-        className="w-full py-2 px-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition"
+        style={{
+          width: '100%',
+          padding: '12px 16px',
+          background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
+          color: '#ffffff',
+          borderRadius: '10px',
+          fontWeight: 700,
+          fontSize: '14px',
+          border: 'none',
+          cursor: 'pointer',
+          boxShadow: '0 4px 12px rgba(99,102,241,0.3)'
+        }}
       >
-        Test
+        Test Regex
       </button>
+
+      {error && (
+        <div style={{ padding: '12px 14px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '10px', color: '#991b1b', fontSize: '13px', display: 'flex', gap: '8px' }}>
+          <AlertCircle size={18} style={{ flexShrink: 0, marginTop: '2px' }} />
+          <span>{error}</span>
+        </div>
+      )}
 
       {output && (
         <div className="space-y-2">
-          <div className="p-3 bg-slate-100 rounded-lg max-h-64 overflow-y-auto">
-            <pre className="text-sm font-mono text-slate-900 whitespace-pre-wrap">
+          <div style={{ padding: '14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+            <div style={{ fontSize: '11px', color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>Results</div>
+            <pre style={{ fontSize: '12px', fontFamily: 'ui-monospace, monospace', color: '#0f172a', wordBreak: 'break-all', whiteSpace: 'pre-wrap' }}>
               {output}
             </pre>
           </div>
@@ -589,67 +725,60 @@ function RegexTester() {
 function HashGenerator() {
   const [input, setInput] = useState('');
   const [hashes, setHashes] = useState<Record<string, string>>({});
-  const [loading, setLoading] = useState(false);
 
-  const generateHashes = useCallback(async () => {
-    if (!input) return;
-    setLoading(true);
+  const generateHashes = useCallback(async (text: string) => {
+    if (!text) { setHashes({}); return; }
+    const results: Record<string, string> = {};
 
-    try {
-      const encoder = new TextEncoder();
-      const data = encoder.encode(input);
-
-      const algorithms = ['SHA-1', 'SHA-256', 'SHA-384', 'SHA-512'];
-      const results: Record<string, string> = {};
-
-      for (const algo of algorithms) {
+    for (const algo of ['SHA-1', 'SHA-256', 'SHA-384', 'SHA-512']) {
+      try {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(text);
         const hashBuffer = await crypto.subtle.digest(algo, data);
         const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
-        results[algo] = hashHex;
+        results[algo] = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      } catch (e) {
+        results[algo] = 'Error generating hash';
       }
-
-      setHashes(results);
-    } catch (err) {
-      console.error('Hash error:', err);
-    } finally {
-      setLoading(false);
     }
-  }, [input]);
+    setHashes(results);
+  }, []);
 
   return (
     <div className="space-y-4">
       <textarea
         value={input}
-        onChange={(e) => setInput(e.target.value)}
+        onChange={(e) => {
+          setInput(e.target.value);
+          generateHashes(e.target.value);
+        }}
         placeholder="Enter text to hash..."
-        className="w-full h-24 p-3 font-mono text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        style={{
+          width: '100%',
+          height: '128px',
+          padding: '12px 14px',
+          fontFamily: 'ui-monospace, monospace',
+          fontSize: '13px',
+          border: '1px solid #cbd5e1',
+          borderRadius: '10px',
+          background: '#f8fafc',
+          color: '#0f172a',
+          outline: 'none',
+          resize: 'vertical'
+        }}
       />
 
-      <button
-        onClick={generateHashes}
-        disabled={loading || !input}
-        className="w-full py-2 px-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        {loading ? 'Generating...' : 'Generate Hashes'}
-      </button>
-
-      {Object.keys(hashes).length > 0 && (
-        <div className="space-y-2">
-          {Object.entries(hashes).map(([algo, hash]) => (
-            <div key={algo} className="p-3 bg-slate-100 rounded-lg">
-              <div className="text-xs text-slate-600 font-semibold mb-1">
-                {algo}
-              </div>
-              <div className="flex gap-2 items-start">
-                <code className="text-xs font-mono text-slate-900 break-all flex-1">
-                  {hash}
-                </code>
-                <CopyButton text={hash} />
-              </div>
-            </div>
-          ))}
+      {Object.entries(hashes).map(([algo, hash]) => (
+        <div key={algo} style={{ padding: '14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+          <div style={{ fontSize: '11px', color: '#64748b', fontWeight: 700, marginBottom: '6px' }}>{algo}</div>
+          <pre style={{ fontSize: '12px', fontFamily: 'ui-monospace, monospace', color: '#0f172a', wordBreak: 'break-all', whiteSpace: 'pre-wrap' }}>
+            {hash}
+          </pre>
         </div>
+      ))}
+
+      {input && Object.keys(hashes).length > 0 && (
+        <CopyButton text={JSON.stringify(hashes, null, 2)} />
       )}
 
       <ClearButton onClick={() => { setInput(''); setHashes({}); }} />
@@ -660,216 +789,245 @@ function HashGenerator() {
 // UUID Generator
 function UUIDGenerator() {
   const [uuids, setUuids] = useState<string[]>([]);
-  const [count, setCount] = useState(1);
 
   const generateUUIDs = useCallback(() => {
-    const newUUIDs = Array.from({ length: Math.min(count, 100) }, () =>
-      crypto.randomUUID()
-    );
+    const newUUIDs = Array.from({ length: 5 }, () => {
+      const uuid4 = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+      return uuid4;
+    });
     setUuids(newUUIDs);
-  }, [count]);
+  }, []);
+
+  useEffect(() => {
+    generateUUIDs();
+  }, [generateUUIDs]);
 
   return (
     <div className="space-y-4">
-      <div className="flex gap-2">
-        <input
-          type="number"
-          min="1"
-          max="100"
-          value={count}
-          onChange={(e) => setCount(Math.min(100, Math.max(1, parseInt(e.target.value) || 1)))}
-          placeholder="Count (1-100)"
-          className="flex-1 p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-        <button
-          onClick={generateUUIDs}
-          className="flex-1 py-2 px-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition"
-        >
-          Generate
-        </button>
+      <button
+        onClick={generateUUIDs}
+        style={{
+          width: '100%',
+          padding: '12px 16px',
+          background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
+          color: '#ffffff',
+          borderRadius: '10px',
+          fontWeight: 700,
+          fontSize: '14px',
+          border: 'none',
+          cursor: 'pointer',
+          boxShadow: '0 4px 12px rgba(99,102,241,0.3)'
+        }}
+      >
+        Generate 5 UUIDs
+      </button>
+
+      <div className="space-y-2">
+        {uuids.map((uuid, i) => (
+          <div key={i} style={{ padding: '12px 14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0', fontFamily: 'ui-monospace, monospace', fontSize: '12px', color: '#0f172a', wordBreak: 'break-all' }}>
+            {uuid}
+          </div>
+        ))}
       </div>
 
       {uuids.length > 0 && (
-        <div className="space-y-2">
-          <div className="p-3 bg-slate-100 rounded-lg max-h-64 overflow-y-auto">
-            <pre className="text-sm font-mono text-slate-900">
-              {uuids.join('\n')}
-            </pre>
-          </div>
-          <button
-            onClick={() => {
-              navigator.clipboard.writeText(uuids.join('\n'));
-            }}
-            className="w-full py-2 px-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition flex items-center justify-center gap-2"
-          >
-            <Copy size={18} />
-            Copy All
-          </button>
-        </div>
+        <CopyButton text={uuids.join('\n')} />
       )}
 
-      <ClearButton onClick={() => { setUuids([]); setCount(1); }} />
+      <ClearButton onClick={() => setUuids([])} />
     </div>
   );
 }
 
 // Timestamp Converter
 function TimestampConverter() {
-  const [timestamp, setTimestamp] = useState(Math.floor(Date.now() / 1000).toString());
-  const [dateString, setDateString] = useState(new Date().toISOString());
-  const [timezone, setTimezone] = useState('UTC');
+  const [input, setInput] = useState('');
+  const [result, setResult] = useState<any>(null);
+  const [error, setError] = useState('');
 
-  const handleTimestampChange = (ts: string) => {
-    setTimestamp(ts);
-    if (ts && !isNaN(Number(ts))) {
-      const date = new Date(parseInt(ts) * 1000);
-      setDateString(date.toISOString());
-    }
-  };
+  const convert = useCallback((val: string) => {
+    setError('');
+    setResult(null);
+    if (!val.trim()) return;
 
-  const handleDateChange = (ds: string) => {
-    setDateString(ds);
-    if (ds) {
-      const ts = Math.floor(new Date(ds).getTime() / 1000);
-      setTimestamp(ts.toString());
+    try {
+      let timestamp: number | null = null;
+      const num = parseInt(val.trim());
+
+      if (!isNaN(num)) {
+        if (num.toString().length === 10) timestamp = num * 1000;
+        else if (num.toString().length === 13) timestamp = num;
+        else setError('Invalid timestamp format. Use 10-digit (seconds) or 13-digit (milliseconds).');
+      } else {
+        const date = new Date(val);
+        if (!isNaN(date.getTime())) {
+          timestamp = date.getTime();
+        } else {
+          setError('Invalid date format');
+        }
+      }
+
+      if (timestamp) {
+        const date = new Date(timestamp);
+        setResult({
+          iso: date.toISOString(),
+          unix: Math.floor(timestamp / 1000),
+          unixMs: timestamp,
+          human: date.toLocaleString(),
+        });
+      }
+    } catch (err) {
+      setError('Conversion error');
     }
-  };
+  }, []);
 
   return (
     <div className="space-y-4">
-      <div className="flex gap-2">
-        <input
-          type="number"
-          value={timestamp}
-          onChange={(e) => handleTimestampChange(e.target.value)}
-          placeholder="Unix timestamp..."
-          className="flex-1 p-3 font-mono text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-        <button
-          onClick={() => handleTimestampChange(Math.floor(Date.now() / 1000).toString())}
-          className="px-3 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition whitespace-nowrap"
-        >
-          Now
-        </button>
-      </div>
-
       <input
-        type="datetime-local"
-        value={dateString.slice(0, 16)}
-        onChange={(e) => handleDateChange(new Date(e.target.value).toISOString())}
-        className="w-full p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        value={input}
+        onChange={(e) => {
+          setInput(e.target.value);
+          convert(e.target.value);
+        }}
+        placeholder="Enter Unix timestamp or date string..."
+        style={{
+          width: '100%',
+          padding: '12px 14px',
+          fontFamily: 'ui-monospace, monospace',
+          fontSize: '13px',
+          border: '1px solid #cbd5e1',
+          borderRadius: '10px',
+          background: '#f8fafc',
+          color: '#0f172a',
+          outline: 'none'
+        }}
       />
 
-      <div className="grid grid-cols-2 gap-3">
-        {timestamp && !isNaN(Number(timestamp)) && (
-          <>
-            <div className="p-3 bg-slate-100 rounded-lg">
-              <div className="text-xs text-slate-600 mb-1">UTC Time</div>
-              <div className="text-xs font-mono text-slate-900 break-all">
-                {new Date(parseInt(timestamp) * 1000).toISOString()}
-              </div>
-            </div>
-            <div className="p-3 bg-slate-100 rounded-lg">
-              <div className="text-xs text-slate-600 mb-1">Local Time</div>
-              <div className="text-xs font-mono text-slate-900 break-all">
-                {new Date(parseInt(timestamp) * 1000).toString()}
-              </div>
-            </div>
-          </>
-        )}
-      </div>
+      {error && (
+        <div style={{ padding: '12px 14px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '10px', color: '#991b1b', fontSize: '13px' }}>{error}</div>
+      )}
 
-      <ClearButton onClick={() => { setTimestamp(''); setDateString(''); }} />
+      {result && (
+        <div className="space-y-2">
+          <div style={{ padding: '14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+            <div style={{ fontSize: '11px', color: '#64748b', fontWeight: 600, marginBottom: '6px' }}>ISO 8601</div>
+            <pre style={{ fontSize: '12px', fontFamily: 'ui-monospace, monospace', color: '#0f172a' }}>
+              {result.iso}
+            </pre>
+          </div>
+          <div style={{ padding: '14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+            <div style={{ fontSize: '11px', color: '#64748b', fontWeight: 600, marginBottom: '6px' }}>Human Readable</div>
+            <pre style={{ fontSize: '12px', fontFamily: 'ui-monospace, monospace', color: '#0f172a' }}>
+              {result.human}
+            </pre>
+          </div>
+          <div style={{ padding: '14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+            <div style={{ fontSize: '11px', color: '#64748b', fontWeight: 600, marginBottom: '6px' }}>Unix Seconds</div>
+            <pre style={{ fontSize: '12px', fontFamily: 'ui-monospace, monospace', color: '#0f172a' }}>
+              {result.unix}
+            </pre>
+          </div>
+          <div style={{ padding: '14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+            <div style={{ fontSize: '11px', color: '#64748b', fontWeight: 600, marginBottom: '6px' }}>Unix Milliseconds</div>
+            <pre style={{ fontSize: '12px', fontFamily: 'ui-monospace, monospace', color: '#0f172a' }}>
+              {result.unixMs}
+            </pre>
+          </div>
+          <CopyButton text={JSON.stringify(result, null, 2)} />
+        </div>
+      )}
+
+      <ClearButton onClick={() => { setInput(''); setResult(null); setError(''); }} />
     </div>
   );
 }
 
 // Color Converter
 function ColorConverter() {
-  const [hex, setHex] = useState('#3b82f6');
-  const [rgb, setRgb] = useState('59, 130, 246');
-  const [hsl, setHsl] = useState('217, 100%, 60%');
+  const [hex, setHex] = useState('#FF6B6B');
+  const [rgb, setRgb] = useState('');
+  const [hsl, setHsl] = useState('');
 
   const hexToRgb = (h: string) => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(h);
-    return result
-      ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`
-      : '';
+    if (!result) return null;
+    return [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)];
   };
 
-  const hexToHsl = (h: string) => {
-    const r = parseInt(h.slice(1, 3), 16) / 255;
-    const g = parseInt(h.slice(3, 5), 16) / 255;
-    const b = parseInt(h.slice(5, 7), 16) / 255;
-
-    const max = Math.max(r, g, b);
-    const min = Math.min(r, g, b);
-    let l = (max + min) / 2;
-    let s = 0;
-    let hue = 0;
-
+  const rgbToHsl = (r: number, g: number, b: number) => {
+    r /= 255; g /= 255; b /= 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h = 0, s = 0;
+    const l = (max + min) / 2;
     if (max !== min) {
       const d = max - min;
       s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-
       switch (max) {
-        case r:
-          hue = ((g - b) / d + (g < b ? 6 : 0)) / 6;
-          break;
-        case g:
-          hue = ((b - r) / d + 2) / 6;
-          break;
-        case b:
-          hue = ((r - g) / d + 4) / 6;
-          break;
+        case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+        case g: h = ((b - r) / d + 2) / 6; break;
+        case b: h = ((r - g) / d + 4) / 6; break;
       }
     }
-
-    return `${Math.round(hue * 360)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%`;
+    return [Math.round(h * 360), Math.round(s * 100), Math.round(l * 100)];
   };
 
-  const handleHexChange = (h: string) => {
-    if (/^#[0-9A-F]{6}$/i.test(h)) {
-      setHex(h);
-      setRgb(hexToRgb(h));
-      setHsl(hexToHsl(h));
-    } else {
-      setHex(h);
+  useEffect(() => {
+    const rgb_vals = hexToRgb(hex);
+    if (rgb_vals) {
+      setRgb(`rgb(${rgb_vals[0]}, ${rgb_vals[1]}, ${rgb_vals[2]})`);
+      const [h, s, l] = rgbToHsl(rgb_vals[0], rgb_vals[1], rgb_vals[2]);
+      setHsl(`hsl(${h}, ${s}%, ${l}%)`);
     }
-  };
+  }, [hex]);
 
   return (
     <div className="space-y-4">
-      <div className="flex gap-3">
-        <div className="w-20 h-20 rounded-lg border-2 border-slate-200" style={{ backgroundColor: hex }} />
-        <input
-          type="color"
-          value={hex}
-          onChange={(e) => handleHexChange(e.target.value)}
-          className="w-20 h-20 rounded-lg cursor-pointer"
-        />
-      </div>
-
       <input
         type="text"
         value={hex}
-        onChange={(e) => handleHexChange(e.target.value)}
-        placeholder="#000000"
-        className="w-full p-3 font-mono text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        onChange={(e) => setHex(e.target.value)}
+        placeholder="#RRGGBB"
+        style={{
+          width: '100%',
+          padding: '12px 14px',
+          fontFamily: 'ui-monospace, monospace',
+          fontSize: '13px',
+          border: '1px solid #cbd5e1',
+          borderRadius: '10px',
+          background: '#f8fafc',
+          color: '#0f172a',
+          outline: 'none'
+        }}
       />
 
+      <div style={{ width: '100%', height: '120px', borderRadius: '12px', border: '2px solid #e2e8f0', backgroundColor: hex }}></div>
+
       <div className="space-y-2">
-        <div className="p-3 bg-slate-100 rounded-lg flex justify-between items-center">
-          <div className="text-xs text-slate-600">RGB</div>
-          <code className="font-mono text-sm text-slate-900">rgb({rgb})</code>
+        <div style={{ padding: '14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+          <div style={{ fontSize: '11px', color: '#64748b', fontWeight: 600, marginBottom: '6px' }}>HEX</div>
+          <pre style={{ fontSize: '12px', fontFamily: 'ui-monospace, monospace', color: '#0f172a' }}>
+            {hex.toUpperCase()}
+          </pre>
         </div>
-        <div className="p-3 bg-slate-100 rounded-lg flex justify-between items-center">
-          <div className="text-xs text-slate-600">HSL</div>
-          <code className="font-mono text-sm text-slate-900">hsl({hsl})</code>
+        <div style={{ padding: '14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+          <div style={{ fontSize: '11px', color: '#64748b', fontWeight: 600, marginBottom: '6px' }}>RGB</div>
+          <pre style={{ fontSize: '12px', fontFamily: 'ui-monospace, monospace', color: '#0f172a' }}>
+            {rgb}
+          </pre>
+        </div>
+        <div style={{ padding: '14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+          <div style={{ fontSize: '11px', color: '#64748b', fontWeight: 600, marginBottom: '6px' }}>HSL</div>
+          <pre style={{ fontSize: '12px', fontFamily: 'ui-monospace, monospace', color: '#0f172a' }}>
+            {hsl}
+          </pre>
         </div>
       </div>
 
-      <ClearButton onClick={() => { setHex('#3b82f6'); setRgb('59, 130, 246'); setHsl('217, 100%, 60%'); }} />
+      <CopyButton text={`${hex}\n${rgb}\n${hsl}`} />
+      <ClearButton onClick={() => setHex('#FF6B6B')} />
     </div>
   );
 }
@@ -878,67 +1036,83 @@ function ColorConverter() {
 function DiffChecker() {
   const [text1, setText1] = useState('');
   const [text2, setText2] = useState('');
+  const [diff, setDiff] = useState<Array<{ type: 'add' | 'remove' | 'same', line: string }>>([]);
 
-  const getDiff = () => {
+  useEffect(() => {
     const lines1 = text1.split('\n');
     const lines2 = text2.split('\n');
-    const result = [];
+    const result: Array<{ type: 'add' | 'remove' | 'same', line: string }> = [];
 
     for (let i = 0; i < Math.max(lines1.length, lines2.length); i++) {
-      const line1 = lines1[i];
-      const line2 = lines2[i];
-
-      if (line1 === line2) {
-        result.push({ type: 'same', content: line1 || '', line: i + 1 });
+      if (i >= lines1.length) {
+        result.push({ type: 'add', line: lines2[i] });
+      } else if (i >= lines2.length) {
+        result.push({ type: 'remove', line: lines1[i] });
+      } else if (lines1[i] === lines2[i]) {
+        result.push({ type: 'same', line: lines1[i] });
       } else {
-        if (line1 !== undefined) {
-          result.push({ type: 'removed', content: line1, line: i + 1 });
-        }
-        if (line2 !== undefined) {
-          result.push({ type: 'added', content: line2, line: i + 1 });
-        }
+        result.push({ type: 'remove', line: lines1[i] });
+        result.push({ type: 'add', line: lines2[i] });
       }
     }
 
-    return result;
-  };
-
-  const diff = getDiff();
+    setDiff(result);
+  }, [text1, text2]);
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-2">
         <textarea
           value={text1}
           onChange={(e) => setText1(e.target.value)}
           placeholder="Original text..."
-          className="h-40 p-3 font-mono text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          style={{
+            width: '100%',
+            height: '200px',
+            padding: '12px 14px',
+            fontFamily: 'ui-monospace, monospace',
+            fontSize: '13px',
+            border: '1px solid #cbd5e1',
+            borderRadius: '10px',
+            background: '#f8fafc',
+            color: '#0f172a',
+            outline: 'none',
+            resize: 'vertical'
+          }}
         />
         <textarea
           value={text2}
           onChange={(e) => setText2(e.target.value)}
-          placeholder="New text..."
-          className="h-40 p-3 font-mono text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          placeholder="Modified text..."
+          style={{
+            width: '100%',
+            height: '200px',
+            padding: '12px 14px',
+            fontFamily: 'ui-monospace, monospace',
+            fontSize: '13px',
+            border: '1px solid #cbd5e1',
+            borderRadius: '10px',
+            background: '#f8fafc',
+            color: '#0f172a',
+            outline: 'none',
+            resize: 'vertical'
+          }}
         />
       </div>
 
       {diff.length > 0 && (
-        <div className="p-3 bg-slate-100 rounded-lg max-h-64 overflow-y-auto">
-          {diff.map((item, idx) => (
+        <div style={{ padding: '14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0', fontFamily: 'ui-monospace, monospace', fontSize: '12px' }}>
+          {diff.map((d, i) => (
             <div
-              key={idx}
-              className={`font-mono text-xs py-1 px-2 border-l-4 ${
-                item.type === 'added'
-                  ? 'bg-green-50 text-green-900 border-green-400'
-                  : item.type === 'removed'
-                  ? 'bg-red-50 text-red-900 border-red-400'
-                  : 'text-slate-700 border-slate-300'
-              }`}
+              key={i}
+              style={d.type === 'add'
+                ? { padding: '4px 8px', borderLeft: '4px solid #22c55e', background: '#f0fdf4', color: '#14532d' }
+                : d.type === 'remove'
+                  ? { padding: '4px 8px', borderLeft: '4px solid #ef4444', background: '#fef2f2', color: '#7f1d1d' }
+                  : { padding: '4px 8px', borderLeft: '4px solid #cbd5e1', color: '#475569' }
+              }
             >
-              <span className="text-xs text-slate-500 mr-2">{item.line}</span>
-              {item.type === 'added' && '+ '}
-              {item.type === 'removed' && '- '}
-              {item.content}
+              {d.line}
             </div>
           ))}
         </div>
@@ -951,60 +1125,49 @@ function DiffChecker() {
 
 // Markdown Preview
 function MarkdownPreview() {
-  const [markdown, setMarkdown] = useState('# Hello\n\nWelcome to **DevToolkit**');
+  const [markdown, setMarkdown] = useState('# Hello\n\nThis is **bold** and *italic* text.');
+  const [html, setHtml] = useState('');
 
-  const simpleMarkdownToHtml = (md: string): string => {
+  const basicMarkdownToHtml = (md: string) => {
     let html = md;
-
-    // Headers
-    html = html.replace(/^### (.*?)$/gm, '<h3 class="text-lg font-bold mt-4 mb-2">$1</h3>');
-    html = html.replace(/^## (.*?)$/gm, '<h2 class="text-xl font-bold mt-5 mb-2">$1</h2>');
-    html = html.replace(/^# (.*?)$/gm, '<h1 class="text-2xl font-bold mt-6 mb-3">$1</h1>');
-
-    // Bold and Italic
+    html = html.replace(/^### (.*?)$/gm, '<h3>$1</h3>');
+    html = html.replace(/^## (.*?)$/gm, '<h2>$1</h2>');
+    html = html.replace(/^# (.*?)$/gm, '<h1>$1</h1>');
     html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
-
-    // Links
-    html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" class="text-blue-600 underline">$1</a>');
-
-    // Code blocks
-    html = html.replace(/```(.*?)```/gs, '<pre class="bg-slate-100 p-3 rounded my-2 overflow-x-auto"><code>$1</code></pre>');
-
-    // Inline code
-    html = html.replace(/`(.*?)`/g, '<code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-sm">$1</code>');
-
-    // Lists
-    html = html.replace(/^\* (.*?)$/gm, '<li>$1</li>');
-    html = html.replace(/(<li>.*?<\/li>)/s, '<ul class="list-disc list-inside ml-4 my-2">$1</ul>');
-
-    // Paragraphs
-    html = html.split('\n\n').map((p) => {
-      if (!p.match(/^<[h|u|p|pre]/)) {
-        return `<p class="mb-3">${p}</p>`;
-      }
-      return p;
-    }).join('\n');
-
+    html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>');
+    html = html.replace(/\n/g, '<br />');
     return html;
   };
 
+  useEffect(() => {
+    setHtml(basicMarkdownToHtml(markdown));
+  }, [markdown]);
+
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-4 h-96">
-        <textarea
-          value={markdown}
-          onChange={(e) => setMarkdown(e.target.value)}
-          placeholder="Enter Markdown..."
-          className="p-3 font-mono text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-        <div
-          className="p-3 border border-slate-200 rounded-lg overflow-y-auto text-slate-900"
-          dangerouslySetInnerHTML={{ __html: simpleMarkdownToHtml(markdown) }}
-        />
-      </div>
+      <textarea
+        value={markdown}
+        onChange={(e) => setMarkdown(e.target.value)}
+        placeholder="Enter markdown..."
+        style={{
+          width: '100%',
+          height: '240px',
+          padding: '12px 14px',
+          fontFamily: 'ui-monospace, monospace',
+          fontSize: '13px',
+          border: '1px solid #cbd5e1',
+          borderRadius: '10px',
+          background: '#f8fafc',
+          color: '#0f172a',
+          outline: 'none',
+          resize: 'vertical'
+        }}
+      />
 
-      <CopyButton text={markdown} />
+      <div style={{ padding: '14px', background: '#ffffff', borderRadius: '10px', border: '1px solid #e2e8f0', minHeight: '120px' }} dangerouslySetInnerHTML={{ __html: html }} />
+
+      <CopyButton text={html} />
       <ClearButton onClick={() => setMarkdown('')} />
     </div>
   );
@@ -1012,72 +1175,59 @@ function MarkdownPreview() {
 
 // Lorem Ipsum Generator
 function LoremIpsumGenerator() {
-  const [type, setType] = useState<'paragraphs' | 'sentences' | 'words'>('paragraphs');
-  const [count, setCount] = useState(3);
+  const [paragraphs, setParagraphs] = useState(3);
   const [output, setOutput] = useState('');
 
-  const loremWords = [
-    'lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit',
-    'sed', 'do', 'eiusmod', 'tempor', 'incididunt', 'ut', 'labore', 'et', 'dolore',
-    'magna', 'aliqua', 'enim', 'ad', 'minim', 'veniam', 'quis', 'nostrud', 'exercitation',
-  ];
+  const loremText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.';
 
-  const generateWord = () => loremWords[Math.floor(Math.random() * loremWords.length)];
-
-  const generateSentence = () => {
-    const len = Math.floor(Math.random() * 8) + 4;
-    const words = Array.from({ length: len }, generateWord);
-    return words[0].charAt(0).toUpperCase() + words[0].slice(1) + ' ' + words.slice(1).join(' ') + '.';
-  };
-
-  const generateParagraph = () => {
-    const sentenceCount = Math.floor(Math.random() * 4) + 3;
-    return Array.from({ length: sentenceCount }, generateSentence).join(' ');
-  };
-
-  const generate = () => {
+  const generateLorem = useCallback(() => {
     let result = '';
-    if (type === 'words') {
-      result = Array.from({ length: count }, generateWord).join(' ');
-    } else if (type === 'sentences') {
-      result = Array.from({ length: count }, generateSentence).join(' ');
-    } else {
-      result = Array.from({ length: count }, generateParagraph).join('\n\n');
+    for (let i = 0; i < paragraphs; i++) {
+      result += loremText + '\n\n';
     }
-    setOutput(result);
-  };
+    setOutput(result.trim());
+  }, [paragraphs]);
+
+  useEffect(() => {
+    generateLorem();
+  }, [generateLorem]);
 
   return (
     <div className="space-y-4">
-      <div className="flex gap-2">
-        {(['paragraphs', 'sentences', 'words'] as const).map((t) => (
-          <button
-            key={t}
-            onClick={() => setType(t)}
-            className={`flex-1 py-2 px-3 rounded-lg font-medium transition ${
-              type === t
-                ? 'bg-blue-600 text-white'
-                : 'bg-slate-200 text-slate-700 hover:bg-slate-300'
-            }`}
-          >
-            {t.charAt(0).toUpperCase() + t.slice(1)}
-          </button>
-        ))}
-      </div>
-
-      <div className="flex gap-2">
+      <div className="flex gap-2 items-center">
+        <label style={{ fontSize: '13px', fontWeight: 600, color: '#0f172a' }}>Paragraphs:</label>
         <input
           type="number"
           min="1"
-          max="100"
-          value={count}
-          onChange={(e) => setCount(Math.min(100, Math.max(1, parseInt(e.target.value) || 1)))}
-          placeholder="Count..."
-          className="flex-1 p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          max="20"
+          value={paragraphs}
+          onChange={(e) => setParagraphs(Math.max(1, parseInt(e.target.value) || 1))}
+          style={{
+            width: '60px',
+            padding: '8px 10px',
+            fontFamily: 'ui-monospace, monospace',
+            fontSize: '13px',
+            border: '1px solid #cbd5e1',
+            borderRadius: '10px',
+            background: '#f8fafc',
+            color: '#0f172a',
+            outline: 'none'
+          }}
         />
         <button
-          onClick={generate}
-          className="flex-1 py-2 px-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition"
+          onClick={generateLorem}
+          style={{
+            flex: 1,
+            padding: '8px 12px',
+            background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
+            color: '#ffffff',
+            borderRadius: '10px',
+            fontWeight: 600,
+            fontSize: '13px',
+            border: 'none',
+            cursor: 'pointer',
+            boxShadow: '0 4px 12px rgba(99,102,241,0.3)'
+          }}
         >
           Generate
         </button>
@@ -1085,257 +1235,440 @@ function LoremIpsumGenerator() {
 
       {output && (
         <div className="space-y-2">
-          <div className="p-3 bg-slate-100 rounded-lg max-h-64 overflow-y-auto">
-            <pre className="text-sm text-slate-900 whitespace-pre-wrap">
-              {output}
-            </pre>
+          <div style={{ padding: '14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0', minHeight: '120px', fontSize: '13px', color: '#0f172a', lineHeight: '1.6' }}>
+            {output}
           </div>
           <CopyButton text={output} />
         </div>
       )}
 
-      <ClearButton onClick={() => { setOutput(''); setCount(3); }} />
+      <ClearButton onClick={() => { setParagraphs(1); setOutput(''); }} />
     </div>
   );
 }
 
-// Helper components
+// Copy Button Component
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
 
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      console.error('Failed to copy');
-    }
-  };
+  const handleCopy = useCallback(() => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }, [text]);
 
   return (
     <button
       onClick={handleCopy}
-      className="w-full py-2 px-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition flex items-center justify-center gap-2"
+      style={{
+        width: '100%',
+        padding: '10px 16px',
+        background: 'linear-gradient(135deg, #059669, #10b981)',
+        color: '#ffffff',
+        borderRadius: '10px',
+        fontWeight: 600,
+        fontSize: '13px',
+        border: 'none',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '8px'
+      }}
     >
-      {copied ? <CheckCircle size={18} /> : <Copy size={18} />}
-      {copied ? 'Copied!' : 'Copy'}
+      <Copy size={16} />
+      {copied ? 'Copied!' : 'Copy to Clipboard'}
     </button>
   );
 }
 
+// Clear Button Component
 function ClearButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="w-full py-2 px-3 bg-slate-200 text-slate-700 rounded-lg font-medium hover:bg-slate-300 transition flex items-center justify-center gap-2"
+      style={{
+        width: '100%',
+        padding: '10px 16px',
+        background: '#f1f5f9',
+        color: '#475569',
+        borderRadius: '10px',
+        fontWeight: 600,
+        fontSize: '13px',
+        border: '1px solid #cbd5e1',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '8px'
+      }}
     >
-      <X size={18} />
+      <X size={16} />
       Clear
     </button>
   );
 }
 
-// Main App Component
+// Main Home Component
 export default function Home() {
-  const [activeTab, setActiveTab] = useState('jwt');
+  const [selectedTool, setSelectedTool] = useState('jwt');
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [showCommandPalette, setShowCommandPalette] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [search, setSearch] = useState('');
   const commandPaletteRef = useRef<HTMLDivElement>(null);
+  const [showCommandPalette, setShowCommandPalette] = useState(false);
+
+  const filteredTools = tools.filter(t =>
+    t.name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const renderTool = () => {
+    switch (selectedTool) {
+      case 'jwt': return <JWTDecoder />;
+      case 'base64': return <Base64Tool />;
+      case 'url': return <URLTool />;
+      case 'cron': return <CronParser />;
+      case 'regex': return <RegexTester />;
+      case 'hash': return <HashGenerator />;
+      case 'uuid': return <UUIDGenerator />;
+      case 'timestamp': return <TimestampConverter />;
+      case 'color': return <ColorConverter />;
+      case 'diff': return <DiffChecker />;
+      case 'markdown': return <MarkdownPreview />;
+      case 'lorem': return <LoremIpsumGenerator />;
+      default: return <JWTDecoder />;
+    }
+  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
         setShowCommandPalette(!showCommandPalette);
       }
-      if (e.key === 'Escape') {
-        setShowCommandPalette(false);
-      }
     };
-
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [showCommandPalette]);
 
-  const filteredTools = tools.filter((tool) =>
-    tool.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const renderTool = () => {
-    switch (activeTab) {
-      case 'jwt':
-        return <JWTDecoder />;
-      case 'base64':
-        return <Base64Tool />;
-      case 'url':
-        return <URLTool />;
-      case 'cron':
-        return <CronParser />;
-      case 'regex':
-        return <RegexTester />;
-      case 'hash':
-        return <HashGenerator />;
-      case 'uuid':
-        return <UUIDGenerator />;
-      case 'timestamp':
-        return <TimestampConverter />;
-      case 'color':
-        return <ColorConverter />;
-      case 'diff':
-        return <DiffChecker />;
-      case 'markdown':
-        return <MarkdownPreview />;
-      case 'lorem':
-        return <LoremIpsumGenerator />;
-      default:
-        return null;
-    }
-  };
-
-  const activeTool = tools.find((t) => t.id === activeTab);
+  const currentTool = tools.find(t => t.id === selectedTool);
+  const ToolIcon = currentTool?.icon;
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-slate-900 to-slate-800 text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 py-6 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden p-2 hover:bg-slate-700 rounded-lg transition"
-            >
-              <Menu size={24} />
-            </button>
-            <div className="flex items-center gap-2">
-              <Zap className="text-blue-400" size={28} />
-              <h1 className="text-2xl font-bold">DevToolkit</h1>
-            </div>
-          </div>
-          <div className="hidden md:flex items-center gap-2 px-3 py-2 bg-slate-700 rounded-lg">
-            <Lock size={16} className="text-green-400" />
-            <span className="text-sm text-slate-200">
-              100% Client-Side
-            </span>
-          </div>
+    <div style={{ display: 'flex', height: '100vh', background: '#f1f5f9' }}>
+      {/* Sidebar */}
+      <div style={{
+        display: sidebarOpen ? 'flex' : 'none',
+        flexDirection: 'column',
+        background: '#1e293b',
+        borderRight: '1px solid #334155',
+        width: '280px',
+        overflowY: 'auto',
+        zIndex: 40
+      }}>
+        {/* Search Bar */}
+        <div style={{ padding: '16px' }}>
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search tools..."
+            style={{
+              width: '100%',
+              background: 'rgba(255,255,255,0.08)',
+              border: '1px solid rgba(255,255,255,0.1)',
+              borderRadius: '10px',
+              color: '#94a3b8',
+              padding: '10px 14px',
+              fontSize: '13px'
+            }}
+          />
         </div>
-      </header>
 
-      <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar */}
-        <aside
-          className={`${
-            sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          } lg:translate-x-0 fixed lg:relative w-64 bg-white border-r border-slate-200 transition-transform duration-300 z-40 flex flex-col h-full`}
-        >
-          <div className="p-4 border-b border-slate-200">
-            <button
-              onClick={() => setShowCommandPalette(true)}
-              className="w-full px-3 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-sm text-slate-700 flex items-center gap-2 transition"
-            >
-              <Search size={16} />
-              <span className="flex-1 text-left">Search tools...</span>
-              <span className="text-xs text-slate-500">⌘K</span>
-            </button>
-          </div>
+        {/* Tool Categories */}
+        <nav style={{ flex: 1, overflowY: 'auto' }}>
+          {toolCategories.map(category => (
+            <div key={category.name} style={{ paddingBottom: '8px' }}>
+              <div style={{
+                fontSize: '10px',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                color: category.color,
+                padding: '12px 16px 6px'
+              }}>
+                {category.name}
+              </div>
+              <div style={{ paddingBottom: '8px' }}>
+                {category.tools.map(toolId => {
+                  const tool = tools.find(t => t.id === toolId);
+                  if (!tool) return null;
+                  const Icon = tool.icon;
+                  return (
+                    <button
+                      key={tool.id}
+                      onClick={() => { setSelectedTool(tool.id); setSearch(''); }}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
+                        width: '100%',
+                        padding: '10px 16px',
+                        borderRadius: '10px',
+                        background: selectedTool === tool.id ? 'linear-gradient(135deg, #4f46e5, #7c3aed)' : 'transparent',
+                        border: 'none',
+                        cursor: 'pointer',
+                        color: selectedTool === tool.id ? '#ffffff' : '#94a3b8',
+                        fontSize: '13px',
+                        fontWeight: selectedTool === tool.id ? 600 : 500,
+                        transition: 'all 0.15s',
+                        boxShadow: selectedTool === tool.id ? '0 4px 12px rgba(99,102,241,0.4)' : 'none'
+                      }}
+                    >
+                      <div style={{
+                        width: '28px',
+                        height: '28px',
+                        borderRadius: '8px',
+                        background: selectedTool === tool.id ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.05)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0
+                      }}>
+                        <Icon size={16} />
+                      </div>
+                      <span>{tool.name}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </nav>
 
-          <div className="flex-1 overflow-y-auto">
-            <nav className="p-2 space-y-1">
-              {tools.map((tool) => {
-                const Icon = tool.icon;
-                return (
-                  <button
-                    key={tool.id}
-                    onClick={() => {
-                      setActiveTab(tool.id);
-                      setSidebarOpen(false);
-                    }}
-                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition ${
-                      activeTab === tool.id
-                        ? 'bg-blue-600 text-white'
-                        : 'text-slate-700 hover:bg-slate-100'
-                    }`}
-                  >
-                    <Icon size={18} />
-                    <span className="text-sm font-medium">{tool.name}</span>
-                  </button>
-                );
-              })}
-            </nav>
-          </div>
+        {/* Footer */}
+        <div style={{
+          padding: '16px',
+          borderTop: '1px solid #334155',
+          background: 'rgba(99,102,241,0.1)',
+          fontSize: '12px',
+          color: '#cbd5e1',
+          textAlign: 'center'
+        }}>
+          12 Tools · All data stays private
+        </div>
+      </div>
 
-          <div className="p-4 border-t border-slate-200 bg-blue-50">
-            <div className="text-xs text-blue-900 text-center">
-              <div className="font-semibold mb-1">12 Tools</div>
-              <div className="text-blue-800">All data stays private</div>
+      {/* Main Content */}
+      <div style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
+        {/* Header */}
+        <header style={{
+          background: 'linear-gradient(135deg, #4f46e5, #7c3aed, #a855f7)',
+          padding: '0',
+          position: 'sticky',
+          top: 0,
+          zIndex: 50,
+          boxShadow: '0 4px 20px rgba(79,70,229,0.3)'
+        }}>
+          <div style={{
+            maxWidth: '1400px',
+            margin: '0 auto',
+            padding: '16px 24px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <button
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#ffffff',
+                  cursor: 'pointer',
+                  padding: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <Menu size={20} />
+              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '10px',
+                  background: 'rgba(255,255,255,0.2)',
+                  backdropFilter: 'blur(10px)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <Zap size={20} style={{ color: '#fbbf24' }} />
+                </div>
+                <div>
+                  <h1 style={{
+                    fontSize: '22px',
+                    fontWeight: 800,
+                    color: '#ffffff',
+                    letterSpacing: '-0.02em',
+                    margin: 0
+                  }}>DevToolkit</h1>
+                  <p style={{
+                    fontSize: '11px',
+                    color: 'rgba(255,255,255,0.7)',
+                    margin: 0,
+                    fontWeight: 500
+                  }}>12 Essential Developer Tools</p>
+                </div>
+              </div>
+            </div>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              background: 'rgba(255,255,255,0.15)',
+              backdropFilter: 'blur(10px)',
+              padding: '8px 16px',
+              borderRadius: '100px',
+              border: '1px solid rgba(255,255,255,0.2)'
+            }}>
+              <Lock size={14} style={{ color: '#4ade80' }} />
+              <span style={{
+                fontSize: '12px',
+                color: '#ffffff',
+                fontWeight: 600
+              }}>100% Client-Side</span>
             </div>
           </div>
-        </aside>
+        </header>
 
-        {/* Main Content */}
-        <main className="flex-1 overflow-auto">
-          <div className="max-w-4xl mx-auto p-4 lg:p-8">
-            {activeTool && (
-              <div className="mb-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    {activeTool.icon && <activeTool.icon size={24} className="text-blue-600" />}
-                  </div>
-                  <h2 className="text-3xl font-bold text-slate-900">
-                    {activeTool.name}
+        {/* Content Area */}
+        <div style={{
+          background: '#f1f5f9',
+          flex: 1,
+          overflow: 'auto'
+        }}>
+          <div style={{
+            maxWidth: '900px',
+            margin: '0 auto',
+            padding: '32px'
+          }}>
+            {/* Tool Header */}
+            {currentTool && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '32px' }}>
+                <div style={{
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '14px',
+                  background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 4px 12px rgba(99,102,241,0.3)'
+                }}>
+                  {ToolIcon && <ToolIcon size={24} style={{ color: '#ffffff' }} />}
+                </div>
+                <div>
+                  <h2 style={{
+                    fontSize: '28px',
+                    fontWeight: 800,
+                    color: '#0f172a',
+                    letterSpacing: '-0.02em',
+                    margin: 0
+                  }}>
+                    {currentTool.name}
                   </h2>
                 </div>
               </div>
             )}
 
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            {/* Tool Card */}
+            <div style={{
+              background: '#ffffff',
+              borderRadius: '16px',
+              border: '1px solid #e2e8f0',
+              boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
+              padding: '28px'
+            }}>
               {renderTool()}
             </div>
           </div>
-        </main>
+        </div>
       </div>
 
       {/* Command Palette */}
       {showCommandPalette && (
-        <div
-          className="fixed inset-0 bg-black/50 z-50 flex items-start justify-center pt-20"
-          onClick={() => setShowCommandPalette(false)}
-        >
-          <div
-            ref={commandPaletteRef}
-            className="w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="p-4 border-b border-slate-200">
-              <input
-                autoFocus
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search tools..."
-                className="w-full p-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-              />
-            </div>
-
-            <div className="max-h-96 overflow-y-auto">
-              {filteredTools.map((tool) => {
-                const Icon = tool.icon;
-                return (
-                  <button
-                    key={tool.id}
-                    onClick={() => {
-                      setActiveTab(tool.id);
-                      setShowCommandPalette(false);
-                      setSearchQuery('');
-                    }}
-                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-100 transition text-left"
-                  >
-                    <Icon size={18} className="text-slate-400" />
-                    <span className="text-slate-900 font-medium">{tool.name}</span>
-                  </button>
-                );
-              })}
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(0,0,0,0.6)',
+          backdropFilter: 'blur(4px)',
+          zIndex: 50,
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'center',
+          paddingTop: '80px'
+        }}>
+          <div style={{
+            width: '100%',
+            maxWidth: '500px',
+            background: '#ffffff',
+            borderRadius: '16px',
+            boxShadow: '0 25px 60px rgba(0,0,0,0.3)',
+            overflow: 'hidden',
+            border: '1px solid #e2e8f0'
+          }}>
+            <input
+              autoFocus
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Type to search tools..."
+              style={{
+                width: '100%',
+                padding: '16px',
+                fontSize: '14px',
+                border: 'none',
+                borderBottom: '1px solid #e2e8f0',
+                outline: 'none'
+              }}
+            />
+            <div>
+              {filteredTools.length > 0 ? (
+                filteredTools.map(tool => {
+                  const Icon = tool.icon;
+                  return (
+                    <button
+                      key={tool.id}
+                      onClick={() => {
+                        setSelectedTool(tool.id);
+                        setShowCommandPalette(false);
+                        setSearch('');
+                      }}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px',
+                        padding: '12px 16px',
+                        cursor: 'pointer',
+                        borderBottom: '1px solid #f1f5f9',
+                        background: '#ffffff',
+                        border: 'none',
+                        width: '100%',
+                        fontSize: '14px',
+                        color: '#0f172a'
+                      }}
+                    >
+                      <Icon size={18} />
+                      {tool.name}
+                    </button>
+                  );
+                })
+              ) : (
+                <div style={{ padding: '16px', textAlign: 'center', color: '#64748b' }}>
+                  No tools found
+                </div>
+              )}
             </div>
           </div>
         </div>
