@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     title: 'How to Decode and Debug JWT Tokens Online',
     description:
       'Learn how to safely decode and understand JWT tokens without exposing your secrets.',
-    url: 'https://devtoolkit.app/blog/jwt-decoder-guide',
+    url: 'https://devtoolskitapp.vercel.app/blog/jwt-decoder-guide',
   },
 };
 
@@ -23,13 +23,13 @@ export default function JWTDecoderGuide() {
             '@context': 'https://schema.org',
             '@type': 'BlogPosting',
             headline: 'How to Decode and Debug JWT Tokens Online',
-            image: 'https://devtoolkit.app/og-image.png',
+            image: 'https://devtoolskitapp.vercel.app/og-image.png',
             datePublished: '2026-04-07',
             dateModified: '2026-04-07',
             author: {
               '@type': 'Organization',
               name: 'DevToolkit',
-              url: 'https://devtoolkit.app',
+              url: 'https://devtoolskitapp.vercel.app',
             },
             description:
               'Learn how to safely decode and understand JWT tokens without exposing your secrets.',

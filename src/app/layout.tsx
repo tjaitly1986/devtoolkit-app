@@ -31,14 +31,14 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: 'website',
-    url: 'https://devtoolkit.app',
+    url: 'https://devtoolskitapp.vercel.app',
     title: 'DevToolkit - Premium Multi-Tool Suite for Developers',
     description:
       'All-in-one developer toolkit with 12+ essential tools. 100% client-side processing.',
     siteName: 'DevToolkit',
     images: [
       {
-        url: 'https://devtoolkit.app/og-image.png',
+        url: 'https://devtoolskitapp.vercel.app/og-image.png',
         width: 1200,
         height: 630,
         alt: 'DevToolkit - Developer Multi-Tool Suite',
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     description:
       'All-in-one developer toolkit with 12+ essential tools. 100% client-side processing.',
     creator: '@devtoolkit',
-    images: ['https://devtoolkit.app/og-image.png'],
+    images: ['https://devtoolskitapp.vercel.app/og-image.png'],
   },
   robots: {
     index: true,
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: 'https://devtoolkit.app',
+    canonical: 'https://devtoolskitapp.vercel.app',
   },
   manifest: '/site.webmanifest',
   icons: {
@@ -116,7 +116,7 @@ export default function RootLayout({
               '@context': 'https://schema.org',
               '@type': 'WebApplication',
               name: 'DevToolkit',
-              url: 'https://devtoolkit.app',
+              url: 'https://devtoolskitapp.vercel.app',
               description:
                 'Premium multi-tool suite for developers with 12+ essential tools for everyday development tasks.',
               applicationCategory: 'DeveloperApplication',
@@ -129,7 +129,7 @@ export default function RootLayout({
               author: {
                 '@type': 'Organization',
                 name: 'DevToolkit',
-                url: 'https://devtoolkit.app',
+                url: 'https://devtoolskitapp.vercel.app',
               },
             }),
           }}

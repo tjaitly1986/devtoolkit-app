@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     title: 'Base64 Encoding Explained — When and How to Use It',
     description:
       'Understand Base64 encoding, its use cases, and when to use it.',
-    url: 'https://devtoolkit.app/blog/base64-encoding-explained',
+    url: 'https://devtoolskitapp.vercel.app/blog/base64-encoding-explained',
   },
 };
 
@@ -24,13 +24,13 @@ export default function Base64EncodingGuide() {
             '@context': 'https://schema.org',
             '@type': 'BlogPosting',
             headline: 'Base64 Encoding Explained — When and How to Use It',
-            image: 'https://devtoolkit.app/og-image.png',
+            image: 'https://devtoolskitapp.vercel.app/og-image.png',
             datePublished: '2026-04-07',
             dateModified: '2026-04-07',
             author: {
               '@type': 'Organization',
               name: 'DevToolkit',
-              url: 'https://devtoolkit.app',
+              url: 'https://devtoolskitapp.vercel.app',
             },
             description: 'Complete guide to Base64 encoding.',
           }),

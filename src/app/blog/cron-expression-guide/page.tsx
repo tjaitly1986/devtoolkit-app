@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     title: 'Cron Expression Cheat Sheet - Syntax, Examples & Common Schedules',
     description:
       'Master cron expressions with our comprehensive cheat sheet. Learn 5-field syntax, wildcards, and 15+ practical examples for scheduling tasks.',
-    url: 'https://devtoolkit.app/blog/cron-expression-guide',
+    url: 'https://devtoolskitapp.vercel.app/blog/cron-expression-guide',
   },
 };
 
@@ -24,13 +24,13 @@ export default function CronExpressionGuide() {
             '@context': 'https://schema.org',
             '@type': 'BlogPosting',
             headline: 'Cron Expression Cheat Sheet — Syntax, Examples, and Common Schedules',
-            image: 'https://devtoolkit.app/og-image.png',
+            image: 'https://devtoolskitapp.vercel.app/og-image.png',
             datePublished: '2026-04-07',
             dateModified: '2026-04-07',
             author: {
               '@type': 'Organization',
               name: 'DevToolkit',
-              url: 'https://devtoolkit.app',
+              url: 'https://devtoolskitapp.vercel.app',
             },
             description:
               'Master cron expressions with our comprehensive cheat sheet. Learn 5-field syntax, wildcards, and 15+ practical examples for scheduling tasks.',
@@ -349,7 +349,7 @@ export default function CronExpressionGuide() {
         </p>
 
         <p className="text-gray-700 mb-6">
-          Use the <Link href="https://devtoolkit.app" className="text-blue-600 hover:text-blue-700 font-medium">
+          Use the <Link href="https://devtoolskitapp.vercel.app" className="text-blue-600 hover:text-blue-700 font-medium">
             DevToolkit Cron Parser
           </Link> to validate your expressions and see exactly when they will execute. This tool
           shows you the next 10 scheduled run times, helping you catch mistakes before they impact
@@ -486,7 +486,7 @@ export default function CronExpressionGuide() {
         <p className="text-gray-700 mb-4">
           Remember the key points: understand the 5-field structure, master the wildcard operators
           (*, /, -, and comma), and always test your expressions before deploying to production.
-          When in doubt, use the <Link href="https://devtoolkit.app" className="text-blue-600 hover:text-blue-700 font-medium">
+          When in doubt, use the <Link href="https://devtoolskitapp.vercel.app" className="text-blue-600 hover:text-blue-700 font-medium">
             DevToolkit Cron Parser
           </Link> to validate and visualize your cron jobs.
         </p>

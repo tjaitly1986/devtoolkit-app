@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     title: 'The Complete Guide to Testing Regular Expressions',
     description:
       'Master regex patterns with our comprehensive guide. Learn how to test, debug, and optimize.',
-    url: 'https://devtoolkit.app/blog/regex-testing-guide',
+    url: 'https://devtoolskitapp.vercel.app/blog/regex-testing-guide',
   },
 };
 
@@ -23,13 +23,13 @@ export default function RegexTestingGuide() {
             '@context': 'https://schema.org',
             '@type': 'BlogPosting',
             headline: 'The Complete Guide to Testing Regular Expressions',
-            image: 'https://devtoolkit.app/og-image.png',
+            image: 'https://devtoolskitapp.vercel.app/og-image.png',
             datePublished: '2026-04-07',
             dateModified: '2026-04-07',
             author: {
               '@type': 'Organization',
               name: 'DevToolkit',
-              url: 'https://devtoolkit.app',
+              url: 'https://devtoolskitapp.vercel.app',
             },
             description: 'Master regex patterns with comprehensive guide.',
           }),
