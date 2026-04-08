@@ -1036,89 +1036,380 @@ function ColorConverter() {
 function DiffChecker() {
   const [text1, setText1] = useState('');
   const [text2, setText2] = useState('');
-  const [diff, setDiff] = useState<Array<{ type: 'add' | 'remove' | 'same', line: string }>>([]);
+  const [viewMode, setViewMode] = useState<'side-by-side' | 'unified' | 'inline'>('side-by-side');
+  const [diff, setDiff] = useState<Array<{ type: 'add' | 'remove' | 'same', line: string, lineNum?: number }>>([]);
+  const [stats, setStats] = useState({ added: 0, removed: 0, unchanged: 0, similarity: 0 });
 
+  // File upload handler
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, setter: (v: string) => void) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => setter(event.target?.result as string || '');
+      reader.readAsText(file);
+    }
+  };
+
+  // Sample data
+  const sampleText1 = `function hello() {
+  console.log("Hello World");
+  return true;
+}
+
+const x = 10;
+const y = 20;
+console.log(x + y);`;
+
+  const sampleText2 = `function hello() {
+  console.log("Hello, World!");
+  return true;
+}
+
+const x = 10;
+const y = 20;
+const z = 30;
+console.log(x + y + z);`;
+
+  // Improved diff algorithm
   useEffect(() => {
     const lines1 = text1.split('\n');
     const lines2 = text2.split('\n');
-    const result: Array<{ type: 'add' | 'remove' | 'same', line: string }> = [];
+    const result: Array<{ type: 'add' | 'remove' | 'same', line: string, lineNum?: number }> = [];
+
+    // Simple LCS-style comparison with line numbers
+    const lineMap: { [key: string]: number[] } = {};
+    lines1.forEach((line, idx) => {
+      if (!lineMap[line]) lineMap[line] = [];
+      lineMap[line].push(idx);
+    });
+
+    const used = new Set<number>();
+    let addCount = 0, removeCount = 0, sameCount = 0;
 
     for (let i = 0; i < Math.max(lines1.length, lines2.length); i++) {
+      const l1 = lines1[i];
+      const l2 = lines2[i];
+
       if (i >= lines1.length) {
-        result.push({ type: 'add', line: lines2[i] });
+        result.push({ type: 'add', line: l2 || '', lineNum: i + 1 });
+        addCount++;
       } else if (i >= lines2.length) {
-        result.push({ type: 'remove', line: lines1[i] });
-      } else if (lines1[i] === lines2[i]) {
-        result.push({ type: 'same', line: lines1[i] });
+        result.push({ type: 'remove', line: l1 || '', lineNum: i + 1 });
+        removeCount++;
+      } else if (l1 === l2) {
+        result.push({ type: 'same', line: l1, lineNum: i + 1 });
+        sameCount++;
+      } else if (l1.trim() === l2.trim() && l1 !== l2) {
+        // Whitespace-only change
+        result.push({ type: 'remove', line: l1, lineNum: i + 1 });
+        result.push({ type: 'add', line: l2, lineNum: i + 1 });
+        removeCount++;
+        addCount++;
       } else {
-        result.push({ type: 'remove', line: lines1[i] });
-        result.push({ type: 'add', line: lines2[i] });
+        result.push({ type: 'remove', line: l1, lineNum: i + 1 });
+        result.push({ type: 'add', line: l2, lineNum: i + 1 });
+        removeCount++;
+        addCount++;
       }
     }
 
+    const totalLines = Math.max(lines1.length, lines2.length);
+    const similarity = totalLines > 0 ? Math.round((sameCount / totalLines) * 100) : 0;
+
     setDiff(result);
+    setStats({ added: addCount, removed: removeCount, unchanged: sameCount, similarity });
   }, [text1, text2]);
 
-  return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-2">
-        <textarea
-          value={text1}
-          onChange={(e) => setText1(e.target.value)}
-          placeholder="Original text..."
-          style={{
-            width: '100%',
-            height: '200px',
-            padding: '12px 14px',
-            fontFamily: 'ui-monospace, monospace',
-            fontSize: '13px',
-            border: '1px solid #cbd5e1',
-            borderRadius: '10px',
-            background: '#f8fafc',
-            color: '#0f172a',
-            outline: 'none',
-            resize: 'vertical'
-          }}
-        />
-        <textarea
-          value={text2}
-          onChange={(e) => setText2(e.target.value)}
-          placeholder="Modified text..."
-          style={{
-            width: '100%',
-            height: '200px',
-            padding: '12px 14px',
-            fontFamily: 'ui-monospace, monospace',
-            fontSize: '13px',
-            border: '1px solid #cbd5e1',
-            borderRadius: '10px',
-            background: '#f8fafc',
-            color: '#0f172a',
-            outline: 'none',
-            resize: 'vertical'
-          }}
-        />
+  // Render side-by-side view
+  const renderSideBySide = () => {
+    const lines1 = text1.split('\n');
+    const lines2 = text2.split('\n');
+    return (
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+        <div style={{ border: '1px solid #cbd5e1', borderRadius: '10px', overflow: 'hidden' }}>
+          <div style={{ background: '#f8fafc', padding: '8px 12px', borderBottom: '1px solid #cbd5e1', fontSize: '12px', fontWeight: 600, color: '#475569' }}>
+            Original
+          </div>
+          <div style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px' }}>
+            {lines1.map((line, i) => (
+              <div
+                key={i}
+                style={{
+                  padding: '4px 8px',
+                  borderLeft: '4px solid #cbd5e1',
+                  color: '#475569',
+                  background: '#ffffff'
+                }}
+              >
+                <span style={{ color: '#94a3b8', marginRight: '8px', display: 'inline-block', width: '24px' }}>{i + 1}</span>
+                {line}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div style={{ border: '1px solid #cbd5e1', borderRadius: '10px', overflow: 'hidden' }}>
+          <div style={{ background: '#f8fafc', padding: '8px 12px', borderBottom: '1px solid #cbd5e1', fontSize: '12px', fontWeight: 600, color: '#475569' }}>
+            Modified
+          </div>
+          <div style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px' }}>
+            {lines2.map((line, i) => (
+              <div
+                key={i}
+                style={{
+                  padding: '4px 8px',
+                  borderLeft: '4px solid #cbd5e1',
+                  color: '#475569',
+                  background: '#ffffff'
+                }}
+              >
+                <span style={{ color: '#94a3b8', marginRight: '8px', display: 'inline-block', width: '24px' }}>{i + 1}</span>
+                {line}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
+    );
+  };
 
-      {diff.length > 0 && (
-        <div style={{ padding: '14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0', fontFamily: 'ui-monospace, monospace', fontSize: '12px' }}>
-          {diff.map((d, i) => (
-            <div
-              key={i}
-              style={d.type === 'add'
+  // Render unified view
+  const renderUnified = () => {
+    return (
+      <div style={{ border: '1px solid #cbd5e1', borderRadius: '10px', overflow: 'hidden', fontFamily: 'ui-monospace, monospace', fontSize: '12px' }}>
+        {diff.map((d, i) => (
+          <div
+            key={i}
+            style={
+              d.type === 'add'
                 ? { padding: '4px 8px', borderLeft: '4px solid #22c55e', background: '#f0fdf4', color: '#14532d' }
                 : d.type === 'remove'
                   ? { padding: '4px 8px', borderLeft: '4px solid #ef4444', background: '#fef2f2', color: '#7f1d1d' }
                   : { padding: '4px 8px', borderLeft: '4px solid #cbd5e1', color: '#475569' }
-              }
-            >
-              {d.line}
-            </div>
-          ))}
+            }
+          >
+            <span style={{ marginRight: '8px', fontWeight: 600 }}>
+              {d.type === 'add' ? '+' : d.type === 'remove' ? '-' : ' '}
+            </span>
+            <span style={{ marginRight: '8px', color: '#94a3b8' }}>({d.lineNum})</span>
+            {d.line}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  // Render inline view
+  const renderInline = () => {
+    const lines1 = text1.split('\n');
+    const lines2 = text2.split('\n');
+    return (
+      <div style={{ border: '1px solid #cbd5e1', borderRadius: '10px', overflow: 'hidden', fontFamily: 'ui-monospace, monospace', fontSize: '12px' }}>
+        {diff.map((d, i) => (
+          <div
+            key={i}
+            style={
+              d.type === 'add'
+                ? { padding: '4px 8px', background: '#f0fdf4', color: '#14532d', borderLeft: '4px solid #22c55e' }
+                : d.type === 'remove'
+                  ? { padding: '4px 8px', background: '#fef2f2', color: '#7f1d1d', borderLeft: '4px solid #ef4444' }
+                  : { padding: '4px 8px', background: '#ffffff', color: '#475569', borderLeft: '4px solid #cbd5e1' }
+            }
+          >
+            <span style={{ marginRight: '8px', fontWeight: 600 }}>
+              {d.type === 'add' ? '+' : d.type === 'remove' ? '-' : '→'}
+            </span>
+            {d.line}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  return (
+    <div className="space-y-4">
+      {/* View Mode Toggle */}
+      <div style={{ display: 'flex', gap: '8px' }}>
+        {['side-by-side', 'unified', 'inline'].map((mode) => (
+          <button
+            key={mode}
+            onClick={() => setViewMode(mode as any)}
+            style={{
+              padding: '8px 14px',
+              background: viewMode === mode ? 'linear-gradient(135deg, #4f46e5, #7c3aed)' : '#f1f5f9',
+              color: viewMode === mode ? '#ffffff' : '#475569',
+              border: viewMode === mode ? 'none' : '1px solid #cbd5e1',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '12px',
+              fontWeight: 600,
+              transition: 'all 0.2s'
+            }}
+          >
+            {mode === 'side-by-side' ? 'Side-by-Side' : mode === 'unified' ? 'Unified' : 'Inline'}
+          </button>
+        ))}
+      </div>
+
+      {/* Inputs Section */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+        <div>
+          <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '6px', display: 'block' }}>
+            Original Text
+          </label>
+          <input
+            type="file"
+            accept=".txt,.json,.css,.js,.md"
+            onChange={(e) => handleFileUpload(e, setText1)}
+            style={{
+              fontSize: '12px',
+              padding: '6px 12px',
+              background: '#f8fafc',
+              border: '1px solid #cbd5e1',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              marginBottom: '8px',
+              width: '100%',
+              boxSizing: 'border-box'
+            }}
+          />
+          <textarea
+            value={text1}
+            onChange={(e) => setText1(e.target.value)}
+            placeholder="Original text..."
+            style={{
+              width: '100%',
+              height: '200px',
+              padding: '12px 14px',
+              fontFamily: 'ui-monospace, monospace',
+              fontSize: '13px',
+              border: '1px solid #cbd5e1',
+              borderRadius: '10px',
+              background: '#f8fafc',
+              color: '#0f172a',
+              outline: 'none',
+              resize: 'vertical',
+              boxSizing: 'border-box'
+            }}
+          />
+        </div>
+        <div>
+          <label style={{ fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '6px', display: 'block' }}>
+            Modified Text
+          </label>
+          <input
+            type="file"
+            accept=".txt,.json,.css,.js,.md"
+            onChange={(e) => handleFileUpload(e, setText2)}
+            style={{
+              fontSize: '12px',
+              padding: '6px 12px',
+              background: '#f8fafc',
+              border: '1px solid #cbd5e1',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              marginBottom: '8px',
+              width: '100%',
+              boxSizing: 'border-box'
+            }}
+          />
+          <textarea
+            value={text2}
+            onChange={(e) => setText2(e.target.value)}
+            placeholder="Modified text..."
+            style={{
+              width: '100%',
+              height: '200px',
+              padding: '12px 14px',
+              fontFamily: 'ui-monospace, monospace',
+              fontSize: '13px',
+              border: '1px solid #cbd5e1',
+              borderRadius: '10px',
+              background: '#f8fafc',
+              color: '#0f172a',
+              outline: 'none',
+              resize: 'vertical',
+              boxSizing: 'border-box'
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Swap Button */}
+      <button
+        onClick={() => {
+          const temp = text1;
+          setText1(text2);
+          setText2(temp);
+        }}
+        style={{
+          padding: '8px 16px',
+          background: '#f1f5f9',
+          border: '1px solid #cbd5e1',
+          borderRadius: '8px',
+          cursor: 'pointer',
+          fontSize: '12px',
+          fontWeight: 600,
+          color: '#475569'
+        }}
+      >
+        Swap Content
+      </button>
+
+      {/* Sample Data Button */}
+      <button
+        onClick={() => {
+          setText1(sampleText1);
+          setText2(sampleText2);
+        }}
+        style={{
+          width: '100%',
+          padding: '10px 16px',
+          background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+          color: '#ffffff',
+          borderRadius: '10px',
+          fontWeight: 600,
+          fontSize: '13px',
+          border: 'none',
+          cursor: 'pointer',
+          boxShadow: '0 4px 12px rgba(99,102,241,0.3)'
+        }}
+      >
+        Load Sample Data
+      </button>
+
+      {/* Statistics Bar */}
+      {(text1 || text2) && (
+        <div style={{ display: 'flex', gap: '12px', padding: '12px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+          <div style={{ padding: '6px 12px', background: '#f0fdf4', borderRadius: '6px', fontSize: '12px', fontWeight: 600, color: '#14532d' }}>
+            Added: {stats.added}
+          </div>
+          <div style={{ padding: '6px 12px', background: '#fef2f2', borderRadius: '6px', fontSize: '12px', fontWeight: 600, color: '#7f1d1d' }}>
+            Removed: {stats.removed}
+          </div>
+          <div style={{ padding: '6px 12px', background: '#f1f5f9', borderRadius: '6px', fontSize: '12px', fontWeight: 600, color: '#475569' }}>
+            Unchanged: {stats.unchanged}
+          </div>
+          <div style={{ padding: '6px 12px', background: '#e0e7ff', borderRadius: '6px', fontSize: '12px', fontWeight: 600, color: '#3730a3' }}>
+            Similarity: {stats.similarity}%
+          </div>
         </div>
       )}
 
-      <ClearButton onClick={() => { setText1(''); setText2(''); }} />
+      {/* Diff Output */}
+      {diff.length > 0 && (
+        <div>
+          <h3 style={{ fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>
+            Comparison ({viewMode === 'side-by-side' ? 'Side-by-Side' : viewMode === 'unified' ? 'Unified' : 'Inline'})
+          </h3>
+          {viewMode === 'side-by-side' && renderSideBySide()}
+          {viewMode === 'unified' && renderUnified()}
+          {viewMode === 'inline' && renderInline()}
+        </div>
+      )}
+
+      <div style={{ display: 'flex', gap: '8px' }}>
+        <ClearButton onClick={() => { setText1(''); setText2(''); }} />
+      </div>
     </div>
   );
 }
